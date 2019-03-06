@@ -13,6 +13,7 @@ RUN apt-get install -y libv4l-dev v4l-utils
 RUN apt-get install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
 RUN apt-get install -y libatlas-base-dev gfortran libeigen3-dev
 RUN apt-get install -y libgtk2.0-dev 
+RUN apt-get install -qqy x11-apps
 RUN apt-get clean
 
 # move to work dir
@@ -132,9 +133,7 @@ RUN sed -ie "s/CUDNN=0/CUDNN=1/g" Makefile
 RUN sed -ie "s/CUDNN_HALF=0/CUDNN_HALF=1/g" Makefile
 RUN sed -ie "s/OPENCV=0/OPENCV=1/g" Makefile
 #for rtx seriese
-RUN sed -ie "s/# ARCH= -gencode arch=compute_75/ARCH= -gencode arch=compute_75/g" Makefile
-#for geforce 1000 series
-#RUN sed -ie "s/# ARCH= -gencode arch=compute_61/ARCH= -gencode arch=compute_61/g" Makefile
+RUN sed -ie "s/	-gencode arch=compute_61,code=[sm_61,compute_61]/	-gencode arch=compute_61,code=[sm_61,compute_61] -gencode arch=compute_75,code=[sm_75,compute_75]/g" Makefile
 RUN make
 
 # download yolo v3 weight file
